@@ -42,6 +42,7 @@ metadata:
   namespace: dev-experience-patcher
 spec:
   parallelism: 1
+  ttlSecondsAfterFinished: 3600
   template:
     spec:
       restartPolicy: OnFailure
