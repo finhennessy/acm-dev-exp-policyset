@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dev-experience-patcher
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: dev-experience-patcher
+  namespace: dev-experience-patcher
+---  
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: dev-experience-patcher-role
+rules:
+  - apiGroups:
+      - operator.openshift.io
+    resources:
+      - consoles
+    verbs:
+      - get
+      - patch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: dev-experience-patcher-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: dev-experience-patcher-role
+subjects:
+  - kind: ServiceAccount
+    name: dev-experience-patcher
+    namespace: dev-experience-patcher
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dev-experience-patcher
+  namespace: dev-experience-patcher
+spec:
+  parallelism: 1
+  template:
+    spec:
+      restartPolicy: OnFailure
+      terminationGracePeriodSeconds: 400
+      dnsPolicy: ClusterFirst
+      serviceAccountName: dev-experience-patcher
+      containers:
+        - name: dev-experience-patcher
+          image: "registry.redhat.io/openshift4/ose-tools-rhel9@sha256:ee65b244fc94d5765514c604dc0a288517dcdce68de65128d047622b6b30a618"
+          command:
+            - /bin/bash
+            - -c
+            - |
+                oc patch consoles.operator.openshift.io cluster --patch '{"spec": {"customization": {"perspectives": [{"id": "dev","visibility": {"state": "Enabled"}}]}}}'  --type=merge

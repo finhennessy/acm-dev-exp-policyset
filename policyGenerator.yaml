@@ -23,4 +23,4 @@ policies:
   - name: pol-dev-experience
     manifests:
       # reference to the manifests used as configuration templates 
-      - path: dev-perspective.yaml
+      - path: dev-perspective-job.yaml
