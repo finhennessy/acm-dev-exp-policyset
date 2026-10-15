@@ -9,6 +9,7 @@ policyDefaults:
   namespace: policies
   # Default remediation action for the policies
   remediationAction: enforce
+  recreateOption: IfRequired
   placement:
     # Default placement rule with label definition for proper cluster selection
     name: placement-dev-experience
