@@ -1,0 +1,25 @@
+# File policy-generator-config.yaml
+apiVersion: policy.open-cluster-management.io/v1
+kind: PolicyGenerator
+metadata:
+  name: developer-experience
+## Policies default specification values
+policyDefaults:
+  # Namespace where the policies are going to be created in
+  namespace: policies
+  # Default remediation action for the policies
+  remediationAction: enforce
+  placement:
+    # Default placement rule with label definition for proper cluster selection
+    name: placement-dev-experience
+    clusterSelectors:
+      env: dev
+placementBindingDefaults:
+  name: "binding-dev-experience"
+# List of policies to be generated
+policies:
+    # name of the policy
+  - name: pol-dev-experience
+    manifests:
+      # reference to the manifests used as configuration templates 
+      - path: dev-perspective.yaml

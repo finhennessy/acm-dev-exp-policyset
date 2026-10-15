@@ -1,0 +1,9 @@
+apiVersion: operator.openshift.io/v1
+kind: Console
+  name: cluster
+spec:
+  customization:
+    perspectives:
+    - id: dev
+      visibility:
+        state: Enabled
